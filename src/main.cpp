@@ -1,12 +1,15 @@
-#include "matTrans.h"
+#include "../include/matTrans.h"
 #include <iostream>
 #include <random>
+#include <fstream>
+#include <string>
 #include <cmath>
 #include <omp.h>
 
-std::vector<std::vector<float>> matInit(int n, int decimals){
+std::vector<std::vector<float>> matInit(int n, int decimals){  //decimals sets decimal places
+    //random number generator
     std::random_device rd;
-    std::mt19937 generator(rd());  //19937 for better random numbers
+    std::mt19937 generator(rd());
     std::uniform_real_distribution<float> distr(0.0f, 10.0f);
 
     std::vector<std::vector<float>> mat(n, std::vector<float>(n));
@@ -21,87 +24,141 @@ std::vector<std::vector<float>> matInit(int n, int decimals){
     return mat;
 }
 
-int main(int argc, char** argv) {
-    double wt1, wt2;
 
-    int size = 4; //default value
+bool checkTrans(std::vector<std::vector<float>>& M, std::vector<std::vector<float>>& T){
+    int size = M.size();
+
+    //random position checker
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<int> distr(0, size - 1);
+
+    for (int i = 0; i < 30; ++i) {
+        int x = distr(generator);
+        int y = distr(generator);
+        if (M[x][y] != T[y][x]) return false;
+    }
+
+    return true;
+}
+
+
+void saveToCSV(int id, std::string type, double time,std::string filename){
+
+
+}
+
+
+int main(int argc, char** argv) {
+    double wt1, wt2, totT;
+    int executions = 0;
+    std::string csvFile = "../data/time.csv";
+    std::vector<int> threads = {1, 2, 4, 8, 16, 32, 64, 96};
+
+    int pow = 4; //default value
     if (argc > 1) {
         try {
-            size = std::stoi(argv[1]);
+            pow = std::stoi(argv[1]);
         } catch (const std::invalid_argument &e) {
             std::cout << "Insert an integer to be used as the size of the matrix" << std::endl;
         }
     }
 
-    int pow = (1 << size);  //2^size
-    std::vector<std::vector<float>> M = matInit(pow, 3);
-    std::vector<std::vector<float>> T;
+    int size = (1 << pow);  //2^size
+    std::vector<std::vector<float>> M = matInit(size, 3);
+    std::vector<std::vector<float>> T(size, std::vector<float>(size));
 
 
     //SEQUENTIAL
-    wt1 = omp_get_wtime();
+    //wt1 = omp_get_wtime();
+    totT = 0.0;
+    for (int i = 0; i < 5; ++i) {  //medium time of 5 executions
+        if (!checkSymSEQ(M, size)){
+            executions++;
 
-    if (!checkSym(M, size)){
-        T = matTranspose(M, size);
+            wt1 = omp_get_wtime();
+            //T = matTransposeSEQ(M, size);
+            matTransposeSEQ(M, T, size);
+            wt2 = omp_get_wtime();
 
-        /**
-        for (int i = 0; i < pow; ++i) {
-            for (int j = 0; j < pow; ++j) {
-                std::cout << T[i][j] << "\t";
+            if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (SEQUENTIAL)" << std::endl;
+
+            totT += (wt2 - wt1);
+
+            /**
+            for (int i = 0; i < size; ++i) {
+                for (int j = 0; j < size; ++j) {
+                    std::cout << M[i][j] << "\t";
+                }
+                std::cout << std::endl;
             }
             std::cout << std::endl;
+            for (int i = 0; i < size; ++i) {
+                for (int j = 0; j < size; ++j) {
+                    std::cout << T[i][j] << "\t";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+            **/
+
+        } else {
+            T = M;
         }
-        **/
-    } else {
-        T = M;
     }
 
-    wt2 = omp_get_wtime();
-    std::cout << "wall clock time (omp_get_wtime) SEQUENTIAL = " << (wt2 - wt1) << " sec" << std::endl;
+
+    //wt2 = omp_get_wtime();
+    std::cout << "Sequential: wall clock time (avg of "<< executions << ") = " << totT / executions <<  " sec" << std::endl;
+    executions = 0;
 
     //IMPLICIT
-    wt1 = omp_get_wtime();
+    totT = 0.0;
+    for (int i = 0; i < 5; ++i) {
+        if (!checkSymIMP(M, size)) {
+            executions++;
+            wt1 = omp_get_wtime();
+            //T = matTransposeIMP(M, size);
+            matTransposeIMP(M,T, size);
+            wt2 = omp_get_wtime();
 
-    if (!checkSymIMP(M, size)){
-        T = matTransposeIMP(M, size);
+            if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (IMPLICIT)" << std::endl;
 
-        /**
-        for (int i = 0; i < pow; ++i) {
-            for (int j = 0; j < pow; ++j) {
-                std::cout << T[i][j] << "\t";
-            }
-            std::cout << std::endl;
+            totT += (wt2-wt1);
+        } else {
+            T = M;
         }
-        **/
-    } else {
-        T = M;
     }
 
-    wt2 = omp_get_wtime();
-    std::cout << "wall clock time (omp_get_wtime) IMPLICIT = " << (wt2 - wt1) << " sec" << std::endl;
-
+    std::cout << "Implicit: wall clock time (avg of "<< executions << ") = " << totT / executions << " sec" << std::endl;
+    executions = 0;
 
     //OpenMP
-    wt1 = omp_get_wtime();
+    //wt1 = omp_get_wtime();
+    std::cout << std::endl << "OpenMP:" << std::endl;
+    std::cout << "N_threads|wall_clock_time (avg)|n_of_executions" << std::endl;
+    for (int thread : threads) {
+        totT = 0.0;
+        for (int i = 0; i < 5; ++i) {
+            if (!checkSymOMP(M, size, thread)) {
+                executions++;
+                wt1 = omp_get_wtime();
+                //T = matTransposeOMP(M, size);
+                matTransposeOMP(M, T, size, thread);
+                wt2 = omp_get_wtime();
 
-    if (!checkSymOMP(M, size)){
-        T = matTransposeOMP(M, size);
+                if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
 
-        /**
-        for (int i = 0; i < pow; ++i) {
-            for (int j = 0; j < pow; ++j) {
-                std::cout << T[i][j] << "\t";
+                totT += (wt2-wt1);
+
+            } else {
+                T = M;
             }
-            std::cout << std::endl;
         }
-        **/
-
-    } else {
-        T = M;
+        //wt2 = omp_get_wtime();
+        std::cout << thread << "\t  " << (totT / executions) << "\t        (avg of " << executions << ")" << std::endl;
+        executions = 0;
     }
-
-    wt2 = omp_get_wtime();
-    std::cout << "wall clock time (omp_get_wtime) OPENMP = " << (wt2 - wt1) << " sec" << std::endl;
 
     return 0;
 }
