@@ -1,58 +1,15 @@
 #include "../include/matTrans.h"
-#include <iostream>
-#include <random>
-#include <fstream>
-#include <string>
-#include <cmath>
+#include "../include/support.h"
 #include <omp.h>
-
-std::vector<std::vector<float>> matInit(int n, int decimals){  //decimals sets decimal places
-    //random number generator
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_real_distribution<float> distr(0.0f, 10.0f);
-
-    std::vector<std::vector<float>> mat(n, std::vector<float>(n));
-
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-
-            mat[i][j] = std::round(distr(generator) * std::pow(10.0f, decimals)) / std::pow(10.0f, decimals);
-        }
-    }
-
-    return mat;
-}
-
-
-bool checkTrans(std::vector<std::vector<float>>& M, std::vector<std::vector<float>>& T){
-    int size = M.size();
-
-    //random position checker
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<int> distr(0, size - 1);
-
-    for (int i = 0; i < 30; ++i) {
-        int x = distr(generator);
-        int y = distr(generator);
-        if (M[x][y] != T[y][x]) return false;
-    }
-
-    return true;
-}
-
-
-void saveToCSV(int id, std::string type, double time,std::string filename){
-
-
-}
+#include <iostream>
 
 
 int main(int argc, char** argv) {
     double wt1, wt2, totT;
     int executions = 0;
-    std::string csvFile = "../data/time.csv";
+    std::string OMPcsvFile = "../data/OMPtime.csv";
+    std::string SEQcsvFile = "../data/SEQtime.csv";
+    std::string IMPcsvFile = "../data/IMPtime.csv";
     std::vector<int> threads = {1, 2, 4, 8, 16, 32, 64, 96};
 
     int pow = 4; //default value
@@ -101,7 +58,6 @@ int main(int argc, char** argv) {
             }
             std::cout << std::endl;
             **/
-
         } else {
             T = M;
         }
@@ -109,6 +65,7 @@ int main(int argc, char** argv) {
 
 
     //wt2 = omp_get_wtime();
+    saveToCSV(1, "imp", (totT/executions), pow, SEQcsvFile);
     std::cout << "Sequential: wall clock time (avg of "<< executions << ") = " << totT / executions <<  " sec" << std::endl;
     executions = 0;
 
@@ -130,6 +87,7 @@ int main(int argc, char** argv) {
         }
     }
 
+    saveToCSV(1, "imp", (totT/executions), pow, IMPcsvFile);
     std::cout << "Implicit: wall clock time (avg of "<< executions << ") = " << totT / executions << " sec" << std::endl;
     executions = 0;
 
@@ -150,12 +108,12 @@ int main(int argc, char** argv) {
                 if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
 
                 totT += (wt2-wt1);
-
             } else {
                 T = M;
             }
         }
         //wt2 = omp_get_wtime();
+        saveToCSV(thread, "omp", (totT/executions), pow, OMPcsvFile);
         std::cout << thread << "\t  " << (totT / executions) << "\t        (avg of " << executions << ")" << std::endl;
         executions = 0;
     }
