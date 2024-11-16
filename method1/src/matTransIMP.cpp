@@ -4,7 +4,7 @@
 
 bool checkSymIMP(const std::vector<std::vector<float>>& mat, int n){  //passed by reference
     for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {  //only check the upper triangle since mat is square
+        for (int j = 0; j < n; ++j) {  //only check the upper triangle since mat is square
             if (mat[i][j] != mat[j][i]) return false;
         }
     }

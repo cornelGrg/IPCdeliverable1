@@ -7,9 +7,9 @@
 int main(int argc, char** argv) {
     double wt1, wt2, totT;
     int executions = 0;
-    std::string OMPcsvFile = "../data/OMPtime.csv";
-    std::string SEQcsvFile = "../data/SEQtime.csv";
-    std::string IMPcsvFile = "../data/IMPtime.csv";
+    std::string OMPcsvFile = "../data/csv/OMPtime.csv";
+    std::string SEQcsvFile = "../data/csv/SEQtime.csv";
+    std::string IMPcsvFile = "../data/csv/IMPtime.csv";
     std::vector<int> threads = {1, 2, 4, 8, 16, 32, 64, 96};
 
     int pow = 4; //default value
