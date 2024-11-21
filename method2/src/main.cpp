@@ -40,23 +40,7 @@ int main(int argc, char** argv) {
             if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (SEQUENTIAL)" << std::endl;
 
             totT += (wt2 - wt1);
-
-            /**
-            for (int i = 0; i < size; ++i) {
-                for (int j = 0; j < size; ++j) {
-                    std::cout << M[i][j] << "\t";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-            for (int i = 0; i < size; ++i) {
-                for (int j = 0; j < size; ++j) {
-                    std::cout << T[i][j] << "\t";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-            **/
+            
         } else {
             T = M;
         }

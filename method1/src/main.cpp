@@ -41,31 +41,21 @@ int main(int argc, char** argv) {
             if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (SEQUENTIAL)" << std::endl;
 
             totT += (wt2 - wt1);
+            saveToCSV(1, "imp", (wt2-wt1), pow, SEQcsvFile);
 
-            /**
-            for (int i = 0; i < size; ++i) {
-                for (int j = 0; j < size; ++j) {
-                    std::cout << M[i][j] << "\t";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-            for (int i = 0; i < size; ++i) {
-                for (int j = 0; j < size; ++j) {
-                    std::cout << T[i][j] << "\t";
-                }
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
-            **/
+            //printMatrix(M);
+            //printMatrix(T);
         } else {
             T = M;
         }
     }
 
 
+    std::vector<std::vector<float>> CheckT = T; //support matrix for checking if imp/omp match the serial transposed
+
+
     //wt2 = omp_get_wtime();
-    saveToCSV(1, "imp", (totT/executions), pow, SEQcsvFile);
+
     std::cout << "Sequential: wall clock time (avg of "<< executions << ") = " << totT / executions <<  " sec" << std::endl;
     executions = 0;
 
@@ -79,15 +69,16 @@ int main(int argc, char** argv) {
             matTransposeIMP(M,T, size);
             wt2 = omp_get_wtime();
 
-            if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (IMPLICIT)" << std::endl;
+            if(T != CheckT) std::cout << "Error: matrix not transposed properly! (IMPLICIT)" << std::endl;
 
             totT += (wt2-wt1);
+            saveToCSV(1, "imp", (wt2-wt1), pow, IMPcsvFile);
         } else {
             T = M;
         }
     }
 
-    saveToCSV(1, "imp", (totT/executions), pow, IMPcsvFile);
+
     std::cout << "Implicit: wall clock time (avg of "<< executions << ") = " << totT / executions << " sec" << std::endl;
     executions = 0;
 
@@ -105,15 +96,16 @@ int main(int argc, char** argv) {
                 matTransposeOMP(M, T, size, thread);
                 wt2 = omp_get_wtime();
 
-                if(!checkTrans(M, T)) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
+                if(T != CheckT) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
 
                 totT += (wt2-wt1);
+                saveToCSV(thread, "omp", (wt2-wt1), pow, OMPcsvFile);
             } else {
                 T = M;
             }
         }
         //wt2 = omp_get_wtime();
-        saveToCSV(thread, "omp", (totT/executions), pow, OMPcsvFile);
+
         std::cout << thread << "\t  " << (totT / executions) << "\t        (avg of " << executions << ")" << std::endl;
         executions = 0;
     }

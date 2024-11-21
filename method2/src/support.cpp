@@ -39,6 +39,18 @@ bool checkTrans(std::vector<std::vector<float>>& M, std::vector<std::vector<floa
     return true;
 }
 
+void printMatrix(const std::vector<std::vector<float>>& M){
+    int size = M.size();
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            std::cout << M[i][j] << "\t";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+
 void saveToCSV(int id, std::string type, const double time, const int m_size, const std::string& filename){
     //check if file already exists
     std::ifstream fileR(filename);
