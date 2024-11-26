@@ -50,7 +50,6 @@ void printMatrix(const std::vector<std::vector<float>>& M){
     std::cout << std::endl;
 }
 
-
 void saveToCSV(int id, std::string type, const double time, const int m_size, const std::string& filename){
     //check if file already exists
     std::ifstream fileR(filename);
@@ -80,4 +79,6 @@ void saveToCSV(int id, std::string type, const double time, const int m_size, co
 
     file.close();
 }
+
+
 

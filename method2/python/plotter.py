@@ -115,25 +115,25 @@ def plot_omp_performance_comparison(filename):
     plt.figure(figsize=(10, 6))
 
     # Plot ideal speedup line
-    plt.plot(subset_threads, subset_threads, linestyle='-', color = 'black', label=f"Ideal speedup")
+    plt.plot(subset_threads, subset_threads, linestyle='--', color = 'black', label=f"Ideal speedup")
 
     #Plot Speedup vs NThreads for all matrix sizes
     for msize in speedup_data:
-        plt.plot(subset_threads, speedup_data[msize], marker='o', linestyle='--', label=f"Matrix Size 2^{msize}")
+        plt.plot(subset_threads, speedup_data[msize], marker='o', linestyle='-', label=f"Matrix Size 2^{msize}")
         plt.xticks(subset_threads)
 
     plt.xlabel('Number of Threads')
     plt.ylabel('Speedup')
     plt.title('Speedup Comparison for Different Matrix Sizes (avg of 5 runs)')
     plt.legend(title='Matrix Sizes', loc='upper right', bbox_to_anchor=(1, 1), prop={'size': 6})
-    plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+    plt.grid(True, which="both", linestyle="-", linewidth=0.5)
     plt.savefig('../data/graphs/omp_speedup_comparison.png')
     plt.show()
 
     # Plot Efficiency vs NThreads for all matrix sizes
     plt.figure(figsize=(10, 6))
     for msize in efficiency_data:
-        plt.plot(subset_threads, efficiency_data[msize], marker='o', linestyle='--', label=f"Matrix Size 2^{msize}")
+        plt.plot(subset_threads, efficiency_data[msize], marker='o', linestyle='-', label=f"Matrix Size 2^{msize}")
         plt.xticks(subset_threads)
 
     plt.xlabel('Number of Threads')
@@ -156,7 +156,7 @@ def plot_omp_performance(n_threads, time, mPow_size):
     #speedup plot
     plt.figure(figsize=(10, 6))
     plt.plot(n_threads, speedup, marker='o', color='b', linestyle='-', label='Speedup vs Threads')
-    plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+    plt.grid(True, which="both", linestyle="-", linewidth=0.5)
     plt.xlabel('Number of Threads')
     plt.ylabel('Speedup')
     #plt.yscale("log")
@@ -172,7 +172,7 @@ def plot_omp_performance(n_threads, time, mPow_size):
     #efficiency plot
     plt.figure(figsize=(10, 6))
     plt.plot(n_threads, efficiency, marker='o', color='r', linestyle='-', label='Efficiency vs Threads')
-    plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+    plt.grid(True, which="both", linestyle="-", linewidth=0.5)
     plt.xlabel('Number of Threads')
     plt.ylabel('Efficiency (%)')
     plt.xticks(n_threads)
@@ -226,6 +226,7 @@ def main():
     # plot_omp_comparison1(omp_csvfile)
     # plot_omp_comparison2(omp_csvfile)
     plot_omp_performance_comparison(omp_csvfile)
+    plot_omp_performance_comparison("../../method1/data/csv/OMPtime.csv")
     # plot_seq_imp_performance(*process_csv(seq_csvfile))
     # plot_seq_imp_performance(*process_csv(imp_csvfile))
     # plot_seq_imp_comparison()

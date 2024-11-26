@@ -115,11 +115,11 @@ def plot_omp_performance_comparison(filename):
     plt.figure(figsize=(10, 6))
 
     # Plot ideal speedup line
-    plt.plot(subset_threads, subset_threads, linestyle='-', color = 'black', label=f"Ideal speedup")
+    plt.plot(subset_threads, subset_threads, linestyle='--', color = 'black', label=f"Ideal speedup")
 
     #Plot Speedup vs NThreads for all matrix sizes
     for msize in speedup_data:
-        plt.plot(subset_threads, speedup_data[msize], marker='o', linestyle='--', label=f"Matrix Size 2^{msize}")
+        plt.plot(subset_threads, speedup_data[msize], marker='o', linestyle='-', label=f"Matrix Size 2^{msize}")
         plt.xticks(subset_threads)
 
     plt.xlabel('Number of Threads')
@@ -133,7 +133,7 @@ def plot_omp_performance_comparison(filename):
     # Plot Efficiency vs NThreads for all matrix sizes
     plt.figure(figsize=(10, 6))
     for msize in efficiency_data:
-        plt.plot(subset_threads, efficiency_data[msize], marker='o', linestyle='--', label=f"Matrix Size 2^{msize}")
+        plt.plot(subset_threads, efficiency_data[msize], marker='o', linestyle='-', label=f"Matrix Size 2^{msize}")
         plt.xticks(subset_threads)
 
     plt.xlabel('Number of Threads')
