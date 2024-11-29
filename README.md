@@ -1,5 +1,7 @@
 # IPCdeliverable1
 ![Author](https://img.shields.io/badge/Author-Cornel%20Grigor-informational)
+![Language](https://img.shields.io/badge/C++-8A2BE2)
+![Language](https://img.shields.io/badge/HPC-red)
 
 Repository created for the first deliverable of the "Introduction to Parallel Computing course" at UniTN.
 
@@ -13,9 +15,9 @@ The main project is written in C++ while the plotter program is written in Pytho
 
 Start by downloading the repository, where you can find multiple *methodX* folders, each folder contains a different algorithm that was tested during the making of the report, every algorithm has the same exact folder structure and the instructions below apply to all of them.
 
-- method1: naivexx
-- method2: naivexxx
-- method3: blockbased
+- method1: Naive out-of-place matrix transposition algorithm
+- method2: In-place triangular matrix transposition algorithm
+- method3: Block-based matrix transposition algorithm
 
 For the best performance overall run *method1*.
 

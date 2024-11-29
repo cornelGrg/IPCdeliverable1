@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         for (int i = 0; i < 5; ++i) {  //medium time of 5 executions
             executions++;
 
-            T = M; //resets the matrix
+            T = M; //Support copy for running in-place transposition
 
             wt1 = omp_get_wtime();
             matTransposeSEQ(T, size);
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
         for (int i = 0; i < 5; ++i) {
             executions++;
 
-            T = M; //resets the matrix
+            T = M; //Support copy for running in-place transposition
 
             wt1 = omp_get_wtime();
             matTransposeIMP(T, size);
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
             for (int i = 0; i < 5; ++i) {
                 executions++;
 
-                T = M; //resets the matrix
+                T = M; //Support copy for running in-place transposition
 
                 wt1 = omp_get_wtime();
                 matTransposeOMP(T, size, thread);

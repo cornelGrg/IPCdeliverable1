@@ -5,7 +5,7 @@
 
 bool checkSymOMP(const std::vector<std::vector<float>>& mat, int n, int thN){
     bool f = true;
-    #pragma omp parallel for collapse(2) num_threads(thN)
+    #pragma omp parallel for collapse(2) num_threads(thN) reduction(&&: f) //reduction on boolean variable to avoid race conditions
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (mat[i][j] != mat[j][i]) f = false;

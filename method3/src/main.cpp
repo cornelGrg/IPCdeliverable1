@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <iostream>
 
-//Block-based transposition algorithm
+//Block-based (out-of-place) transposition algorithm
 int main(int argc, char** argv) {
     bool isSym = false;
     double wt1, wt2, totT;
@@ -88,35 +88,33 @@ int main(int argc, char** argv) {
         executions = 0;
     }
 
-    //OpenMP is not taken into account for the block based algorithm!
-    /**
-    //wt1 = omp_get_wtime();
+    T = M;
+    //OpenMP
     std::cout << std::endl << "OpenMP:" << std::endl;
-    std::cout << "N_threads|wall_clock_time (avg)|n_of_executions" << std::endl;
-    for (int thread : threads) {
+    for (int thread: threads) {
         totT = 0.0;
-        for (int i = 0; i < 5; ++i) {
-            if (!checkSymOMP(M, size, thread)) {
+        isSym = checkSymOMP(M, size, thread);
+        if (!isSym) {
+            for (int i = 0; i < 5; ++i) {
                 executions++;
+
                 wt1 = omp_get_wtime();
-                //T = matTransposeOMP(M, size);
-                matTransposeOMP(M, T, size, thread);
+                matTransposeOMP(M, T, size, thread, 256);
                 wt2 = omp_get_wtime();
 
-                if(T != CheckT) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
+                if (T != CheckT) std::cout << "Error: matrix not transposed properly! (OMP)" << std::endl;
 
-                totT += (wt2-wt1);
-                saveToCSV(thread, "omp", (wt2-wt1), pow, OMPcsvFile);
-            } else {
-                T = M;
+                totT += (wt2 - wt1);
+                saveToCSV(thread, "omp", (wt2 - wt1), pow, OMPcsvFile);
             }
-        }
-        //wt2 = omp_get_wtime();
 
-        std::cout << thread << "\t  " << (totT / executions) << "\t        (avg of " << executions << ")" << std::endl;
-        executions = 0;
+            std::cout << thread << "\t  " << (totT / executions) << "\t        (avg of " << executions << " with 256blocksize)" << std::endl;
+            executions = 0;
+        }else {
+            T = M;
+            std::cout << "Matrix was symmetric against all odds! No transposition required" << std::endl;
+        }
     }
-    **/
 
     return 0;
 }
