@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
     T = M; //resets the matrix
     //SEQUENTIAL
     std::cout << "Sequential:" << std::endl;
+    std::cout << "block_size|wall_clock_time (avg)|n_of_executions" << std::endl;
     for (int block : blocks) {
         totT = 0.0;
         isSym = checkSymSEQ(M, size);
@@ -63,6 +64,7 @@ int main(int argc, char** argv) {
     T = M; //resets the matrix
     //IMPLICIT
     std::cout << std::endl << "Implicit:" << std::endl;
+    std::cout << "block_size|wall_clock_time (avg)|n_of_executions" << std::endl;
     for (int block : blocks) {
         totT = 0.0;
         isSym = checkSymIMP(M, size);
@@ -91,6 +93,7 @@ int main(int argc, char** argv) {
     T = M;
     //OpenMP
     std::cout << std::endl << "OpenMP:" << std::endl;
+    std::cout << "n_threads|wall_clock_time (avg)|n_of_executions" << std::endl;
     for (int thread: threads) {
         totT = 0.0;
         isSym = checkSymOMP(M, size, thread);

@@ -30,7 +30,7 @@ def plot_omp_comparison1(filename):
     df_avg = df.groupby(['n_threads', 'mPow_size']).agg({'time(s)': 'mean'}).reset_index()
 
     # Create a figure and axis for the plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 6))
 
     labels = {
         12: "[M1] Naive out-of-place",
@@ -266,9 +266,9 @@ def plot_imp_optimizations():
 def main():
     # plot_omp_performance(*process_csv(omp_csvfile))
     # plot_omp_comparison1(omp_csvfile)
-    plot_omp_comparison1('../../methodComparison/omp1_12.csv')
-    # plot_omp_comparison2(omp_csvfile)
-    # plot_omp_performance_comparison(omp_csvfile)
+    # plot_omp_comparison1('../../methodComparisonData/omp1_12.csv')
+    plot_omp_comparison2(omp_csvfile)
+    plot_omp_performance_comparison(omp_csvfile)
     # plot_seq_imp_performance(*process_csv(seq_csvfile))
     # plot_seq_imp_performance(*process_csv(imp_csvfile))
     # plot_seq_imp_comparison()
