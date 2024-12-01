@@ -58,6 +58,9 @@ IPCdeliverable1/
 ### Testing instructions
 (These instructions apply to all the 3 methods)
 There are two ways to run the program inside the cluster:
+Before doing everything clone the repository using `git clone https://github.com/cornelGrg/IPCdeliverable1`
+
+In case you download the zip manually from github.com please rename the folder project from `IPCdeliverable1-main` to `IPCdeliverable1`.
 
 #### PBS script:
 1. Connect via SSH to the cluster: ` ssh username@hpc.unitn.it `
