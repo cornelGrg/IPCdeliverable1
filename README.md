@@ -26,6 +26,7 @@ You can find already generated graphs inside every method's graph folder `/metho
 ### Directory structure
 IPCdeliverable1/
 
+```bash
 ├── method1     #Naive out-of-place
 │   ├── build
 │   ├── data
@@ -52,6 +53,7 @@ IPCdeliverable1/
 │   └── src
 ├── methodComparisonData #Data used to compare the 3 methods and generated graph
 └── pbsOutputs
+```
 
 ### Testing instructions
 (These instructions apply to all the 3 methods)
